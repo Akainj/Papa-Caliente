@@ -9,9 +9,9 @@ use Illuminate\Support\Facades\Log;
 
 class PapaCalienteController extends Controller
 {
-    private $miLaptop = 1;
+    private int $miLaptop = 1;
 
-    private $laptops = [
+    private array $laptops = [
         2 => 'https://unsenile-harmony-giddier.ngrok-free.dev',
         3 => 'https://unstorable-randall-unpitched.ngrok-free.dev',
     ];
@@ -22,7 +22,7 @@ class PapaCalienteController extends Controller
 
         Numero::create([
             'numero' => $numero,
-            'from' => 'laptop 1'
+            'origen' => 'laptop 1'
         ]);
 
         Log::info("[LAPTOP 1] Juego iniciado con {$numero}");
@@ -42,7 +42,7 @@ class PapaCalienteController extends Controller
 
         Numero::create([
             'numero' => $numero,
-            'from' => 'laptop 3'
+            'origen' => 'laptop 3'
         ]);
 
         Log::info("[LAPTOP 1] Recibí {$numero} desde Laptop 3");
@@ -56,26 +56,29 @@ class PapaCalienteController extends Controller
         ]);
     }
 
-    private function enviarASiguiente($numero)
+    private function enviarASiguiente(int $numero): void
     {
-        $url = $this->laptops[2] . '/api/recibir';
+        try {
+            $url = $this->laptops[2] . '/api/recibir';
 
-        Log::info("[LAPTOP 1] Enviando {$numero} a Laptop 2");
+            Log::info("[LAPTOP 1] Enviando {$numero} a Laptop 2");
 
-        Http::timeout(5)
-            ->withHeaders([
-                'ngrok-skip-browser-warning' => 'true'
-            ])
-            ->post($url, [
-                'numero' => $numero
-            ]);
+            Http::timeout(10)
+                ->withHeaders(['ngrok-skip-browser-warning' => 'true'])
+                ->post($url, [
+                    'numero' => $numero
+                ]);
+        } catch (\Throwable $e) {
+            Log::error("[LAPTOP 1] Error enviando a Laptop 2: " . $e->getMessage());
+        }
     }
 
     public function estado()
     {
         return response()->json([
-            'total' => Numero::count(),
-            'maximo' => Numero::max('numero')
+            'laptop' => 1,
+            'total_registros' => Numero::count(),
+            'numero_maximo' => Numero::max('numero'),
         ]);
     }
 }

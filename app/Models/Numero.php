@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace App\Models;
 
-use Closure;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class DelayMiddleware
+class Numero extends Model
 {
-    public function handle(Request $request, Closure $next): Response
-    {
-        $delay = rand(5, 10);
-        Log::info("[LAPTOP 1] Delay aplicado: {$delay}s");
-        sleep($delay);
-        return $next($request);
-    }
+    use HasFactory;
+
+    protected $table = 'numeros';
+
+    protected $fillable = [
+        'numero',
+        'origen',
+    ];
 }
