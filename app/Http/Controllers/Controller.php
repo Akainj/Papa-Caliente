@@ -21,7 +21,7 @@ class PapaCalienteController extends Controller
         return response()->json(['error' => 'Laptop 3 no inicia'], 403);
     }
 
-git    public function recibir(Request $request)
+    public function recibir(Request $request)
     {
         $numero = (int) $request->input('numero');
 
